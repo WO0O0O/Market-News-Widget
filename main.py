@@ -1,8 +1,8 @@
 import os
 import json
 import requests
-import google.generativeai as genai
-from duckduckgo_search import DDGS
+from google import genai
+from ddgs import DDGS
 from datetime import datetime
 
 # Setup
@@ -10,7 +10,7 @@ GENAI_KEY = os.environ["GEMINI_API_KEY"]
 GIST_TOKEN = os.environ["GIST_TOKEN"]
 GIST_ID = os.environ["GIST_ID"]
 
-genai.configure(api_key=GENAI_KEY)
+client = genai.Client(api_key=GENAI_KEY)
 
 def get_market_data():
     queries = [
@@ -53,8 +53,6 @@ def get_market_data():
     return str(results)
 
 def analyze_market(search_data):
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
     prompt = f"""
 Role: Senior Crypto Market Analyst & Day Trading Assistant
 
@@ -117,7 +115,10 @@ Important:
 - Output ONLY the JSON, no extra text or markdown blocks
 """
     
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt
+    )
     clean_json = response.text.replace('```json', '').replace('```', '').strip()
     return json.loads(clean_json)
 
