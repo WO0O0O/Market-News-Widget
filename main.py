@@ -14,11 +14,35 @@ genai.configure(api_key=GENAI_KEY)
 
 def get_market_data():
     queries = [
-        "Bitcoin price today usd", 
+        # Prices
+        "Bitcoin price today usd",
         "Ethereum price today usd",
-        "latest crypto news geopolitics fed rate",
+        
+        # Macro & Geopolitics
+        "geopolitical news today risk markets oil gold",
+        "US China trade war tariffs latest news",
+        "Fed interest rate decision FOMC probability",
+        "CPI PPI economic data release today",
+        "DXY dollar index 10 year treasury yield today",
+        
+        # Regulatory
+        "SEC crypto lawsuit news today",
+        "Bitcoin ETF inflow outflow news today",
+        "crypto regulation news today",
+        
+        # Whale activity
+        "bitcoin whale large transaction today",
+        "crypto whale buying selling news",
+        
+        # Technical
+        "bitcoin support resistance levels today",
+        "ethereum support resistance levels today",
+        "bitcoin RSI moving average analysis",
+        
+        # Sentiment
         "crypto fear and greed index today",
-        "bitcoin support resistance levels analysis today"
+        "bitcoin liquidation heatmap",
+        "crypto twitter sentiment today"
     ]
     
     results = []
@@ -32,23 +56,66 @@ def analyze_market(search_data):
     model = genai.GenerativeModel('gemini-1.5-flash')
     
     prompt = f"""
-    Role: Senior Crypto Analyst.
-    Task: Analyze these search results and output a strictly valid JSON object.
+Role: Senior Crypto Market Analyst & Day Trading Assistant
+
+You are analyzing this search data to provide a market overview. Output ONLY valid JSON, no markdown.
+
+Search Data: {search_data}
+
+Analyze the data and output this exact JSON structure:
+
+{{
+    "btc_price": "$XX,XXX",
+    "eth_price": "$X,XXX",
     
-    Search Data: {search_data}
+    "macro": {{
+        "geopolitics": "Brief summary of any conflict/trade war news affecting markets",
+        "fed": "Fed rate outlook and probability info",
+        "economic_data": "Any major data releases today (CPI, PPI, NFP)",
+        "dxy_yields": "Brief note on dollar/treasury movement"
+    }},
     
-    Output Format (JSON only, no markdown blocks):
-    {{
-        "btc_price": "$95,XXX",
-        "eth_price": "$3,XXX",
-        "bias": "BULLISH" | "BEARISH" | "NEUTRAL",
-        "bias_color": "#00FF00" (if bullish) | "#FF0000" (if bearish) | "#FFFF00" (if neutral),
-        "summary": "One sentence summary of the market driver (e.g. 'Fed rate pause likely, driving risk-on flows').",
-        "support": "BTC Support: $XX,XXX",
-        "resistance": "BTC Res: $XX,XXX",
-        "updated": "HH:MM UTC"
-    }}
-    """
+    "regulatory": {{
+        "sec_news": "Any SEC lawsuits or court rulings",
+        "etf_flows": "ETF inflow/outflow summary",
+        "whale_activity": "Any large whale movements in last 24h"
+    }},
+    
+    "technicals": {{
+        "btc_intraday_support": "$XX,XXX",
+        "btc_intraday_resistance": "$XX,XXX",
+        "btc_1m_support": "$XX,XXX",
+        "btc_chart_note": "Brief technical observation",
+        "eth_intraday_support": "$X,XXX",
+        "eth_intraday_resistance": "$X,XXX",
+        "eth_1m_support": "$X,XXX",
+        "eth_chart_note": "Brief technical observation"
+    }},
+    
+    "sentiment": {{
+        "fear_greed": "XX - Status (e.g. 72 - Greed)",
+        "liquidations": "Note on liquidation clusters if available",
+        "narratives": "What crypto twitter is focused on today"
+    }},
+    
+    "news_links": [
+        {{"title": "Article title 1", "url": "https://..."}},
+        {{"title": "Article title 2", "url": "https://..."}},
+        {{"title": "Article title 3", "url": "https://..."}}
+    ],
+    
+    "bias": "BULLISH" | "BEARISH" | "NEUTRAL",
+    "bias_color": "#00FF00" (if bullish) | "#FF0000" (if bearish) | "#FFFF00" (if neutral),
+    "summary": "One sentence actionable insight (e.g. 'Cautiously bullish - Fed pause likely, but watch $94k support')",
+    "updated": "HH:MM UTC"
+}}
+
+Important:
+- Use actual data from the search results where available
+- If data is not found, say "No recent data" rather than making it up
+- Keep each field concise
+- Output ONLY the JSON, no extra text or markdown blocks
+"""
     
     response = model.generate_content(prompt)
     clean_json = response.text.replace('```json', '').replace('```', '').strip()
