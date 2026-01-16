@@ -200,32 +200,36 @@ async function showDetailView(data) {
   addSection(table, "SENTIMENT & CATALYSTS");
 
   if (data.sentiment) {
-    addRow(
-      table,
-      "Fear & Greed Index",
-      safe(data, "sentiment.fear_greed"),
-      "#fff"
-    );
+    let fgValue = safe(data, "sentiment.fear_greed");
+    if (fgValue && fgValue !== "No recent data") {
+      addRow(table, "Fear & Greed Index", fgValue, "#fff");
+    }
+
     if (data.sentiment.fear_greed_note) {
       addTextRow(table, safe(data, "sentiment.fear_greed_note"));
     }
 
-    addSubSection(table, "Liquidation Heatmap");
-    addTechRow(
-      table,
-      "Short Squeeze Zone",
-      safe(data, "sentiment.liquidations_up"),
-      "#4ade80"
-    );
-    addTechRow(
-      table,
-      "Long Liquidation Zone",
-      safe(data, "sentiment.liquidations_down"),
-      "#f87171"
-    );
+    let liqUp = safe(data, "sentiment.liquidations_up");
+    let liqDown = safe(data, "sentiment.liquidations_down");
 
-    addSubSection(table, "Narratives");
-    addTextRow(table, safe(data, "sentiment.narratives"));
+    if (
+      (liqUp && liqUp !== "No recent data") ||
+      (liqDown && liqDown !== "No recent data")
+    ) {
+      addSubSection(table, "Liquidation Heatmap");
+      if (liqUp && liqUp !== "No recent data") {
+        addLiqRow(table, "Short Squeeze Zone", liqUp, "#4ade80");
+      }
+      if (liqDown && liqDown !== "No recent data") {
+        addLiqRow(table, "Long Liquidation Zone", liqDown, "#f87171");
+      }
+    }
+
+    let narratives = safe(data, "sentiment.narratives");
+    if (narratives && narratives !== "No recent data") {
+      addSubSection(table, "Narratives");
+      addTextRow(table, narratives);
+    }
   }
 
   // ─── SECTION 4: NEWS LINKS ───
@@ -293,14 +297,27 @@ function addRow(table, label, value, color) {
 
 function addTechRow(table, label, value, color) {
   let row = new UITableRow();
-  row.height = 45;
+  row.height = 55;
   row.backgroundColor = new Color("#1a1a2e");
   let cell = row.addText(label, value);
   cell.widthWeight = 100;
   cell.titleColor = new Color("#555");
-  cell.titleFont = Font.systemFont(11);
+  cell.titleFont = Font.systemFont(12);
   cell.subtitleColor = new Color(color);
   cell.subtitleFont = Font.boldSystemFont(16);
+  table.addRow(row);
+}
+
+function addLiqRow(table, label, value, color) {
+  let row = new UITableRow();
+  row.height = 60;
+  row.backgroundColor = new Color("#1a1a2e");
+  let cell = row.addText(label, value);
+  cell.widthWeight = 100;
+  cell.titleColor = new Color("#666");
+  cell.titleFont = Font.systemFont(12);
+  cell.subtitleColor = new Color(color);
+  cell.subtitleFont = Font.boldSystemFont(15);
   table.addRow(row);
 }
 
