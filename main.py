@@ -116,7 +116,7 @@ Important:
 """
     
     response = client.models.generate_content(
-        model="gemini-3.0-flash",
+        model="gemini-2.5-flash",
         contents=prompt
     )
     clean_json = response.text.replace('```json', '').replace('```', '').strip()
