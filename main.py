@@ -13,19 +13,13 @@ GIST_ID = os.environ["GIST_ID"]
 client = genai.Client(api_key=GENAI_KEY)
 
 def get_live_prices():
-    """Fetch accurate prices from CoinGecko (free, no API key needed)"""
+    """Fetch accurate prices from CoinGecko"""
     try:
         url = "https://api.coingecko.com/api/v3/simple/price"
-        params = {
-            "ids": "bitcoin,ethereum",
-            "vs_currencies": "usd"
-        }
+        params = {"ids": "bitcoin,ethereum", "vs_currencies": "usd"}
         response = requests.get(url, params=params, timeout=10)
         data = response.json()
-        return {
-            "btc": data["bitcoin"]["usd"],
-            "eth": data["ethereum"]["usd"]
-        }
+        return {"btc": data["bitcoin"]["usd"], "eth": data["ethereum"]["usd"]}
     except Exception as e:
         print(f"Price fetch error: {e}")
         return None
@@ -33,9 +27,9 @@ def get_live_prices():
 def get_market_data():
     queries = [
         # Macro & Geopolitics
-        "geopolitical news today risk markets oil gold",
+        "geopolitical news today risk markets oil gold conflict",
         "US China trade war tariffs latest news",
-        "Fed interest rate decision FOMC probability",
+        "Fed interest rate decision FOMC probability January 2026",
         "CPI PPI economic data release today",
         "DXY dollar index 10 year treasury yield today",
         
@@ -45,18 +39,19 @@ def get_market_data():
         "crypto regulation news today",
         
         # Whale activity
-        "bitcoin whale large transaction today",
-        "crypto whale buying selling news",
+        "bitcoin whale large transaction today on-chain",
+        "crypto whale buying selling news accumulation",
         
         # Technical
-        "bitcoin support resistance levels today",
-        "ethereum support resistance levels today",
-        "bitcoin RSI moving average analysis",
+        "bitcoin support resistance levels analysis today",
+        "ethereum support resistance levels analysis today",
+        "bitcoin technical analysis RSI EMA today",
+        "BTC price prediction range today",
         
         # Sentiment
         "crypto fear and greed index today",
-        "bitcoin liquidation heatmap",
-        "crypto twitter sentiment today"
+        "bitcoin liquidation heatmap short squeeze",
+        "crypto twitter sentiment narrative today"
     ]
     
     results = []
@@ -67,74 +62,91 @@ def get_market_data():
     return str(results)
 
 def analyze_market(search_data, live_prices):
-    # Include live prices in the prompt so Gemini uses them
     price_info = ""
     if live_prices:
-        price_info = f"LIVE PRICES (use these exact values): BTC = ${live_prices['btc']:,.2f}, ETH = ${live_prices['eth']:,.2f}"
+        price_info = f"LIVE PRICES: BTC = ${live_prices['btc']:,.2f}, ETH = ${live_prices['eth']:,.2f}"
+    
+    today = datetime.utcnow().strftime("%B %d, %Y")
     
     prompt = f"""
 Role: Senior Crypto Market Analyst & Day Trading Assistant
-
-You are analyzing this search data to provide a market overview. Output ONLY valid JSON, no markdown.
 
 {price_info}
 
 Search Data: {search_data}
 
-Analyze the data and output this exact JSON structure:
+Today's Date: {today}
+
+Analyze the search data and create a comprehensive market analysis report. Output ONLY valid JSON:
 
 {{
-    "btc_price": "${live_prices['btc']:,.2f}" if live_prices else "$XX,XXX",
-    "eth_price": "${live_prices['eth']:,.2f}" if live_prices else "$X,XXX",
+    "date": "{today}",
+    "btc_price": "${live_prices['btc']:,.2f}" if available,
+    "eth_price": "${live_prices['eth']:,.2f}" if available,
     
     "macro": {{
-        "geopolitics": "Brief summary of any conflict/trade war news affecting markets",
-        "fed": "Fed rate outlook and probability info",
-        "economic_data": "Any major data releases today (CPI, PPI, NFP)",
-        "dxy_yields": "Brief note on dollar/treasury movement"
+        "geopolitics": "2-3 sentences on active conflicts, NATO tensions, or regional issues affecting risk assets",
+        "trade": "Any trade war developments, tariff news, or supply chain impacts",
+        "fed": "Fed rate decision probability and outlook (e.g. '82-95% chance of HOLD at Jan FOMC')",
+        "data_releases": "Any major economic prints today (CPI, NFP, PPI) or note if none",
+        "dxy_yields": "10Y Treasury yield level and DXY movement (e.g. '10Y at 4.17%, DXY at 99.10')"
     }},
     
     "regulatory": {{
-        "sec_news": "Any SEC lawsuits or court rulings",
-        "etf_flows": "ETF inflow/outflow summary",
-        "whale_activity": "Any large whale movements in last 24h"
+        "sec_news": "Any SEC lawsuits, court rulings, or enforcement actions",
+        "etf_flows": "Bitcoin ETF inflow/outflow data from yesterday",
+        "other": "Any other regulatory news (regional bans, new bills, etc.)"
+    }},
+    
+    "whales": {{
+        "activity": "On-chain whale accumulation or distribution data",
+        "positioning": "Whale long/short ratio if available",
+        "notable": "Any notable large transactions or wallet movements"
     }},
     
     "technicals": {{
+        "btc_price": "${live_prices['btc']:,.2f}" if available,
         "btc_intraday_support": "$XX,XXX",
         "btc_intraday_resistance": "$XX,XXX",
         "btc_1m_support": "$XX,XXX",
-        "btc_chart_note": "Brief technical observation",
+        "btc_trend": "Trend description (e.g. 'Consolidating between $95k-$98k')",
+        "btc_chart_note": "Key technical observation",
+        "eth_price": "${live_prices['eth']:,.2f}" if available,
         "eth_intraday_support": "$X,XXX",
-        "eth_intraday_resistance": "$X,XXX",
+        "eth_intraday_resistance": "$X,XXX", 
         "eth_1m_support": "$X,XXX",
-        "eth_chart_note": "Brief technical observation"
+        "eth_trend": "Trend description",
+        "eth_chart_note": "Key technical observation (e.g. 'Lagging BTC, stuck in range')"
     }},
     
     "sentiment": {{
-        "fear_greed": "XX - Status (e.g. 72 - Greed)",
-        "liquidations": "Note on liquidation clusters if available",
-        "narratives": "What crypto twitter is focused on today"
+        "fear_greed": "XX - Status (e.g. 61 - Greed)",
+        "fear_greed_note": "Context on sentiment shift",
+        "liquidations_up": "Short liquidation cluster level (e.g. '$97k-$98k')",
+        "liquidations_down": "Long liquidation cluster level (e.g. 'Below $95k')",
+        "narratives": "What crypto twitter/traders are focused on today"
     }},
     
     "news_links": [
-        {{"title": "Article title 1", "url": "https://..."}},
-        {{"title": "Article title 2", "url": "https://..."}},
-        {{"title": "Article title 3", "url": "https://..."}}
+        {{"title": "Article 1", "url": "https://..."}},
+        {{"title": "Article 2", "url": "https://..."}},
+        {{"title": "Article 3", "url": "https://..."}},
+        {{"title": "Article 4", "url": "https://..."}},
+        {{"title": "Article 5", "url": "https://..."}}
     ],
     
-    "bias": "BULLISH" | "BEARISH" | "NEUTRAL",
-    "bias_color": "#00FF00" (if bullish) | "#FF0000" (if bearish) | "#FFFF00" (if neutral),
-    "summary": "One sentence actionable insight (e.g. 'Cautiously bullish - Fed pause likely, but watch $94k support')",
+    "bias": "BULLISH" | "BEARISH" | "NEUTRAL" | "WAIT",
+    "bias_color": "#00FF00" (bullish) | "#FF0000" (bearish) | "#FFFF00" (neutral) | "#FF9500" (wait),
+    "summary": "One actionable sentence (e.g. 'Wait for volatility - avoid chopping in $95k-$98k range, wait for breakout above $98.1k or breakdown below $95k')",
     "updated": "HH:MM UTC"
 }}
 
 Important:
-- Use the LIVE PRICES provided above for btc_price and eth_price
-- Use actual data from the search results where available
-- If data is not found, say "No recent data" rather than making it up
-- Keep each field concise
-- Output ONLY the JSON, no extra text or markdown blocks
+- Use actual data from search results
+- If specific data not found, provide reasonable context or say "No recent data"
+- Be specific with price levels and percentages
+- Keep analysis actionable for day traders
+- Output ONLY JSON, no markdown
 """
     
     response = client.models.generate_content(
