@@ -6,17 +6,17 @@ Quick reference for free tier limits and expected usage.
 
 ## GitHub Actions
 
-| Metric        | Free Tier Limit | Your Usage    |
-| ------------- | --------------- | ------------- |
-| Minutes/month | 2,000           | ~60-90 mins   |
-| Runs/month    | -               | ~1,440        |
-| Frequency     | -               | Every 30 mins |
+| Metric        | Free Tier Limit | Your Usage      |
+| ------------- | --------------- | --------------- |
+| Minutes/month | 2,000           | ~15-30 mins     |
+| Runs/month    | -               | ~510            |
+| Frequency     | -               | Hourly 6am-10pm |
 
 **Calculation:**
 
-- 30 mins = 48 runs/day = 1,440 runs/month
+- Hourly from 6am-10pm UTC = 17 runs/day = ~510 runs/month
 - Each run ~30-60 seconds
-- Monthly usage: ~720-1,440 minutes (well under 2,000)
+- Monthly usage: ~255-510 minutes (well under 2,000)
 
 **Monitor:** [GitHub Actions Usage](https://github.com/settings/billing)
 
@@ -26,13 +26,13 @@ Quick reference for free tier limits and expected usage.
 
 | Metric       | Free Tier Limit | Your Usage |
 | ------------ | --------------- | ---------- |
-| Requests/min | 15              | 1          |
-| Requests/day | 1,500           | 48         |
-| Tokens/min   | 1,000,000       | ~10,000    |
+| Requests/min | 10              | 1          |
+| Requests/day | 20              | 17         |
+| Tokens/min   | 250,000         | ~10,000    |
 
-**Model:** gemini-1.5-flash
+**Model:** gemini-2.5-flash-lite
 
-> **Note:** gemini-2.5-flash and 2.0-flash have much lower free tier limits. We use 1.5-flash for its generous 1,500 RPD limit.
+> **Note:** Hourly updates from 6am-10pm UTC = 17 requests/day, staying within the 20 RPD limit.
 
 **Monitor:** [Gemini Rate Limits](https://ai.dev/rate-limit)
 
@@ -43,7 +43,7 @@ Quick reference for free tier limits and expected usage.
 | Metric       | Limit     | Your Usage |
 | ------------ | --------- | ---------- |
 | Requests/min | 10-30     | 1          |
-| Requests/day | Unlimited | 48         |
+| Requests/day | Unlimited | 17         |
 
 No API key required for basic price endpoint.
 
@@ -53,7 +53,7 @@ No API key required for basic price endpoint.
 
 | Metric     | Limit      | Your Usage      |
 | ---------- | ---------- | --------------- |
-| Rate limit | Soft limit | ~20 queries/run |
+| Rate limit | Soft limit | ~23 queries/run |
 
 No API key. Uses ddgs Python library (web scraping).
 
@@ -72,13 +72,13 @@ Your JSON file is ~2-3 KB — no concerns.
 
 ## Expected Monthly Summary
 
-| Service        | Expected Usage  | % of Free Tier     |
-| -------------- | --------------- | ------------------ |
-| GitHub Actions | ~90 mins        | 4.5%               |
-| Gemini API     | ~1,440 requests | ~3% of daily limit |
-| CoinGecko      | ~1,440 requests | N/A (no limit)     |
+| Service        | Expected Usage | % of Free Tier |
+| -------------- | -------------- | -------------- |
+| GitHub Actions | ~30 mins       | 1.5%           |
+| Gemini API     | ~17 requests   | 85% of daily   |
+| CoinGecko      | ~510 requests  | N/A (no limit) |
 
-**Verdict:** You're using a tiny fraction of all free tiers.
+**Verdict:** Staying within all free tier limits.
 
 ---
 
@@ -94,7 +94,7 @@ Your JSON file is ~2-3 KB — no concerns.
 
 ## Monitoring Links
 
-- [GitHub Actions Runs](https://github.com/WO0O0O/Market-News-Widget/actions)
+- [GitHub Actions Runs](https://github.com/WO0O0O/BOLD-widget/actions)
 - [Gemini Rate Limits](https://ai.dev/rate-limit)
 - [Your Gist](https://gist.github.com/WO0O0O/43171059615e0008db423e0ace9e8e6a)
 
