@@ -2,6 +2,11 @@
 
 Free iPhone widget that shows live BTC and Gold prices with market analysis. Runs on GitHub Actions, uses Gemini AI for analysis, stores data in a Gist, displays via Scriptable.
 
+Made this for when I wake up in the morning and want to know the state of the market before any day trading.
+
+![Widget](docs/widget.jpeg)
+![Page View](docs/page.jpeg)
+
 Built by Daniel Wooster.
 
 ## How it works
