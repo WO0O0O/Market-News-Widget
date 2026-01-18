@@ -2,7 +2,7 @@ name: Hourly Crypto Update
 
 on:
   schedule:
-    - cron: "0,30 * * * *" # Every 30 mins (on hour and half past)
+    - cron: "0 6-22 * * *" # Hourly, 6am-10pm UTC (17 runs/day)
   workflow_dispatch: # Manual trigger button
 
 concurrency:
