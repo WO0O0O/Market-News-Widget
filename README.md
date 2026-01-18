@@ -7,8 +7,6 @@ Made this for when I wake up in the morning and want to know the state of the ma
 ![Widget](docs/widget.jpeg)
 ![Page View](docs/page.jpeg)
 
-Built by Daniel Wooster.
-
 ## How it works
 
 1. GitHub Action runs hourly (6am-10pm UTC)
