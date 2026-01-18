@@ -296,7 +296,7 @@ function addSubSection(table, title) {
 
 function addRow(table, label, value, color) {
   let row = new UITableRow();
-  row.height = 55;
+  row.height = 70;
   row.backgroundColor = new Color("#1a1a2e");
   let cell = row.addText(label, value);
   cell.widthWeight = 100;
@@ -309,7 +309,7 @@ function addRow(table, label, value, color) {
 
 function addTechRow(table, label, value, color) {
   let row = new UITableRow();
-  row.height = 55;
+  row.height = 70;
   row.backgroundColor = new Color("#1a1a2e");
   let cell = row.addText(label, value);
   cell.widthWeight = 100;
@@ -322,7 +322,7 @@ function addTechRow(table, label, value, color) {
 
 function addLiqRow(table, label, value, color) {
   let row = new UITableRow();
-  row.height = 60;
+  row.height = 70;
   row.backgroundColor = new Color("#1a1a2e");
   let cell = row.addText(label, value);
   cell.widthWeight = 100;
@@ -336,7 +336,7 @@ function addLiqRow(table, label, value, color) {
 function addTextRow(table, text, color, size) {
   color = color || "#ccc";
   size = size || 14;
-  let height = Math.max(55, Math.ceil(text.length / 35) * 22);
+  let height = Math.max(70, Math.ceil(text.length / 30) * 28);
   let row = new UITableRow();
   row.height = height;
   row.backgroundColor = new Color("#1a1a2e");
