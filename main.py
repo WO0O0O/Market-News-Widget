@@ -240,7 +240,9 @@ if __name__ == "__main__":
         json_output["btc_price"] = f"${live_prices['btc']:,.2f}"
         json_output["gold_price"] = f"${live_prices['gold']:,.2f}"
     
-    json_output["updated"] = datetime.utcnow().strftime("%H:%M UTC")
+    from zoneinfo import ZoneInfo
+    london_time = datetime.now(ZoneInfo("Europe/London"))
+    json_output["updated"] = london_time.strftime("%H:%M GMT")
     
     print("Updating Gist...")
     update_gist(json_output)

@@ -1,4 +1,4 @@
-// CryptoTick Widget - by Daniel Wooster
+// Bold_widget - by Daniel Wooster
 // BTC & Gold Market Analysis
 
 const GIST_URL =
