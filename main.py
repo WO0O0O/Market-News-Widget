@@ -27,49 +27,37 @@ def get_live_prices():
 
 def get_market_data():
     queries = [
+        # Breaking News - Prioritise fresh sources
+        "site:reuters.com breaking news markets today",
+        "site:bloomberg.com markets breaking news",
+        "Trump news markets today",
+        "breaking financial news today",
+        
         # Macro & Geopolitics
-        "geopolitical news today risk markets oil gold conflict",
-        "US China trade war tariffs latest news",
-        "Fed interest rate decision FOMC probability",
-        "CPI PPI economic data release today",
-        "DXY dollar index 10 year treasury yield today",
+        "geopolitical news today risk markets",
+        "US China trade tariffs news today",
+        "Fed interest rate FOMC latest",
+        "economic data CPI PPI today",
+        "DXY dollar treasury yield today",
         
         # BTC Regulatory & Flows
-        "SEC crypto lawsuit news today",
-        "Bitcoin ETF inflow outflow news today",
-        "crypto regulation news today",
-        
-        # BTC Whale activity
-        "bitcoin whale large transaction today on-chain",
-        "crypto whale buying selling news accumulation",
+        "Bitcoin ETF flows today",
+        "SEC crypto news today",
+        "bitcoin whale accumulation today",
         
         # BTC Technical
-        "bitcoin support resistance levels analysis today",
-        "bitcoin technical analysis RSI EMA today",
-        "BTC price prediction analysis today",
+        "bitcoin support resistance today",
+        "BTC technical analysis today",
+        "crypto fear greed index",
         
-        # BTC Sentiment
-        "crypto fear and greed index today",
-        "bitcoin liquidation heatmap short squeeze",
-        
-        # Gold Regulatory & Flows
-        "gold ETF inflow outflow GLD IAU today",
-        "central bank gold buying selling reserves today",
-        "gold import export ban news today",
-        
-        # Gold Demand & Supply
-        "gold demand China India jewelry today",
-        "gold mining production news today",
-        "institutional gold buying today",
+        # Gold News & Flows
+        "gold price news today",
+        "central bank gold buying today",
+        "gold ETF flows today",
         
         # Gold Technical
-        "gold XAU price support resistance levels today",
-        "gold spot price technical analysis today",
-        "gold price forecast analysis today",
-        
-        # Gold Sentiment
-        "gold safe haven demand news today",
-        "gold silver ratio analysis today"
+        "gold support resistance levels today",
+        "gold technical analysis XAU"
     ]
     
     results = []
@@ -186,10 +174,16 @@ Output ONLY valid JSON in this exact structure:
 
 Important:
 - Use ACTUAL data from search results - do not make up prices or levels
-- Extract real URLs from the search data for news_links
+- Extract real URLs from the search data for news_links (prioritise Reuters, Bloomberg, FT)
 - If specific data not found, say "No recent data"
 - Be specific with price levels based on the search data
 - Output ONLY valid JSON, no markdown formatting
+
+**Bias Criteria (for BTC):**
+- BULLISH: ETF inflows positive + Fear & Greed > 50 + price above key support + no major negative news
+- BEARISH: ETF outflows + Fear & Greed < 30 + price below key support + negative regulatory/macro news
+- NEUTRAL: Mixed signals, choppy price action, no clear direction
+- WAIT: High uncertainty, major event pending (FOMC, CPI), or conflicting signals - best to stay on sidelines
 """
     
     # Retry with exponential backoff for rate limits
