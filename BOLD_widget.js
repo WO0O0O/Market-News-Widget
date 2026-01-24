@@ -1,5 +1,6 @@
 // Bold_widget - by Daniel Wooster
 // BTC & Gold Market Analysis
+// frontend designed by gemini lol - hence why it sucks
 
 const GIST_URL =
   "https://gist.githubusercontent.com/WO0O0O/43171059615e0008db423e0ace9e8e6a/raw/crypto_data.json";
